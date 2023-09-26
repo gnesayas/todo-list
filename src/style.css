@@ -1,0 +1,38 @@
+.general {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.flexcolumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-div {
+    padding: 50px;
+    background-color: #fef08a;
+    box-sizing: border-box;
+    height: 80%;
+    width: 100%;
+}
+
+.adding-div {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 50px;
+    background-color: #a5f3fc;
+    box-sizing: border-box;
+    height: 20%;
+    width: 100%;
+}
+
+.adding-btn {
+    padding: 16px;
+    border: none;
+    border-radius: 32px;
+    cursor: pointer;
+    height: 50px;
+    width: 150px;
+}

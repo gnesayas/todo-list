@@ -1,1 +1,1 @@
-# todo-list
+This mini-project is a todo list to help with practicing organizing my code and using webpack.
