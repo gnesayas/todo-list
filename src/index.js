@@ -21,4 +21,11 @@ import { loadPage, render } from "./page";
     projects.push(defaultProject);
 
     loadPage();
+
+    const projectDialog = document.getElementById('projectDialog');
+
+    const addProjectBtn = document.getElementById('addProject');
+    addProjectBtn.addEventListener('click', () => {
+        projectDialog.showModal();
+    });
 })();
