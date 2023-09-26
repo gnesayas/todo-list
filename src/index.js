@@ -23,9 +23,15 @@ import { loadPage, render } from "./page";
     loadPage();
 
     const projectDialog = document.getElementById('projectDialog');
+    const todoDialog = document.getElementById('todoDialog');
 
     const addProjectBtn = document.getElementById('addProject');
     addProjectBtn.addEventListener('click', () => {
         projectDialog.showModal();
+    });
+
+    const addTodoBtn = document.getElementById('addTodo');
+    addTodoBtn.addEventListener('click', () => {
+        todoDialog.showModal();
     });
 })();
