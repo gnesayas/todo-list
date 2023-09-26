@@ -1,6 +1,6 @@
 import './style.css';
 
-function loadPage() {
+function loadPage(projects) {
     document.body.classList.add('general');
     document.body.classList.add('flexcolumn');
     document.body.style.height = '100vh';
@@ -37,8 +37,8 @@ function loadPage() {
     projectNameInput.setAttribute('id', 'name');
     projectNameInput.setAttribute('name', 'name');
     projectNameInput.classList.add('form-input');
-    projectNameDiv.appendChild(projectNameInput);
 
+    projectNameDiv.appendChild(projectNameInput);
     projectForm.appendChild(projectNameDiv);
 
     const projectBtnDiv = document.createElement('div');
@@ -57,8 +57,8 @@ function loadPage() {
     projectConfirmBtn.setAttribute('type', 'submit');
     projectConfirmBtn.classList.add('form-button');
     projectConfirmBtn.textContent = 'Confirm';
-    projectBtnDiv.appendChild(projectConfirmBtn);
 
+    projectBtnDiv.appendChild(projectConfirmBtn);
     projectForm.appendChild(projectBtnDiv);
     projectDialog.appendChild(projectForm);
     document.body.appendChild(projectDialog);
@@ -76,25 +76,45 @@ function loadPage() {
     todoFormHeading.textContent = 'Add a Todo';
     todoForm.appendChild(todoFormHeading);
 
-    // TODO: Add a way to select the project
+    const selectDiv = document.createElement('div');
+    selectDiv.classList.add('form-div');
+    selectDiv.classList.add('space-between-div');
 
-    const todoTitleDiv = document.createElement('div');
-    todoTitleDiv.classList.add('form-div');
-    todoTitleDiv.classList.add('space-between-div');
+    const selectLabel = document.createElement('label');
+    selectLabel.setAttribute('for', 'select');
+    selectLabel.textContent = 'Project:';
+    selectDiv.appendChild(selectLabel);
 
-    const todoTitleLabel = document.createElement('label');
-    todoTitleLabel.setAttribute('for', 'title');
-    todoTitleLabel.textContent = 'Title:';
-    todoTitleDiv.appendChild(todoTitleLabel);
+    const selectDropdown = document.createElement('select');
+    selectDropdown.setAttribute('id', 'select');
 
-    const todoTitleInput = document.createElement('input');
-    todoTitleInput.setAttribute('type', 'text');
-    todoTitleInput.setAttribute('id', 'title');
-    todoTitleInput.setAttribute('name', 'title');
-    todoTitleInput.classList.add('form-input');
-    todoTitleDiv.appendChild(todoTitleInput);
+    for (const project of projects) {
+        const option = document.createElement('option');
+        option.setAttribute('value', project.name);
+        option.textContent = project.name;
+        selectDropdown.appendChild(option);
+    }
 
-    todoForm.appendChild(todoTitleDiv);
+    selectDiv.appendChild(selectDropdown);
+    todoForm.appendChild(selectDiv);
+
+    const titleDiv = document.createElement('div');
+    titleDiv.classList.add('form-div');
+    titleDiv.classList.add('space-between-div');
+
+    const titleLabel = document.createElement('label');
+    titleLabel.setAttribute('for', 'title');
+    titleLabel.textContent = 'Title:';
+    titleDiv.appendChild(titleLabel);
+
+    const titleInput = document.createElement('input');
+    titleInput.setAttribute('type', 'text');
+    titleInput.setAttribute('id', 'title');
+    titleInput.setAttribute('name', 'title');
+    titleInput.classList.add('form-input');
+
+    titleDiv.appendChild(titleInput);
+    todoForm.appendChild(titleDiv);
 
     const descriptionDiv = document.createElement('div');
     descriptionDiv.classList.add('form-div');
@@ -110,8 +130,8 @@ function loadPage() {
     descriptionInput.setAttribute('id', 'description');
     descriptionInput.setAttribute('name', 'description');
     descriptionInput.classList.add('form-input');
-    descriptionDiv.appendChild(descriptionInput);
 
+    descriptionDiv.appendChild(descriptionInput);
     todoForm.appendChild(descriptionDiv);
 
     const dateDiv = document.createElement('div');
@@ -127,8 +147,8 @@ function loadPage() {
     dateInput.setAttribute('type', 'date');
     dateInput.setAttribute('id', 'date');
     dateInput.setAttribute('name', 'date');
-    dateDiv.appendChild(dateInput);
 
+    dateDiv.appendChild(dateInput);
     todoForm.appendChild(dateDiv);
 
     const priorityDiv = document.createElement('div');
@@ -174,8 +194,8 @@ function loadPage() {
     highPriorityInput.setAttribute('id', 'high');
     highPriorityInput.setAttribute('name', 'priority');
     highPriorityInput.setAttribute('value', 'high');
-    priorityDiv.appendChild(highPriorityInput);
 
+    priorityDiv.appendChild(highPriorityInput);
     todoForm.appendChild(priorityDiv);
 
     const todoBtnDiv = document.createElement('div');
@@ -194,8 +214,8 @@ function loadPage() {
     todoConfirmBtn.setAttribute('type', 'submit');
     todoConfirmBtn.classList.add('form-button');
     todoConfirmBtn.textContent = 'Confirm';
-    todoBtnDiv.appendChild(todoConfirmBtn);
 
+    todoBtnDiv.appendChild(todoConfirmBtn);
     todoForm.appendChild(todoBtnDiv);
     todoDialog.appendChild(todoForm);
     document.body.appendChild(todoDialog);

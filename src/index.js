@@ -20,7 +20,7 @@ import { loadPage, render } from "./page";
     const defaultProject = createProject('My Project');
     projects.push(defaultProject);
 
-    loadPage();
+    loadPage(projects);
 
     const projectDialog = document.getElementById('projectDialog');
     const todoDialog = document.getElementById('todoDialog');
