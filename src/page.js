@@ -114,7 +114,22 @@ function loadPage() {
 
     todoForm.appendChild(descriptionDiv);
 
-    // TODO: Add a way to get the date
+    const dateDiv = document.createElement('div');
+    dateDiv.classList.add('form-div');
+    dateDiv.classList.add('space-between-div');
+
+    const dateLabel = document.createElement('label');
+    dateLabel.setAttribute('for', 'date');
+    dateLabel.textContent = 'Due Date:';
+    dateDiv.appendChild(dateLabel);
+
+    const dateInput = document.createElement('input');
+    dateInput.setAttribute('type', 'date');
+    dateInput.setAttribute('id', 'date');
+    dateInput.setAttribute('name', 'date');
+    dateDiv.appendChild(dateInput);
+
+    todoForm.appendChild(dateDiv);
 
     const priorityDiv = document.createElement('div');
     priorityDiv.classList.add('form-div');
