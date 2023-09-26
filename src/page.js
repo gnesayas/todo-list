@@ -116,7 +116,52 @@ function loadPage() {
 
     // TODO: Add a way to get the date
 
-    // TODO: Add a way to get the priority
+    const priorityDiv = document.createElement('div');
+    priorityDiv.classList.add('form-div');
+    priorityDiv.classList.add('space-between-div');
+
+    const priorityParagraph = document.createElement('p');
+    priorityParagraph.textContent = 'Priority:';
+    priorityParagraph.classList.add('general');
+    priorityDiv.appendChild(priorityParagraph);
+
+    const lowPriorityLabel = document.createElement('label');
+    lowPriorityLabel.setAttribute('for', 'low');
+    lowPriorityLabel.textContent = 'Low';
+    priorityDiv.appendChild(lowPriorityLabel);
+
+    const lowPriorityInput = document.createElement('input');
+    lowPriorityInput.setAttribute('type', 'radio');
+    lowPriorityInput.setAttribute('id', 'low');
+    lowPriorityInput.setAttribute('name', 'priority');
+    lowPriorityInput.setAttribute('value', 'low');
+    priorityDiv.appendChild(lowPriorityInput);
+
+    const midPriorityLabel = document.createElement('label');
+    midPriorityLabel.setAttribute('for', 'mid');
+    midPriorityLabel.textContent = 'Mid';
+    priorityDiv.appendChild(midPriorityLabel);
+
+    const midPriorityInput = document.createElement('input');
+    midPriorityInput.setAttribute('type', 'radio');
+    midPriorityInput.setAttribute('id', 'mid');
+    midPriorityInput.setAttribute('name', 'priority');
+    midPriorityInput.setAttribute('value', 'mid');
+    priorityDiv.appendChild(midPriorityInput);
+
+    const highPriorityLabel = document.createElement('label');
+    highPriorityLabel.setAttribute('for', 'high');
+    highPriorityLabel.textContent = 'High';
+    priorityDiv.appendChild(highPriorityLabel);
+
+    const highPriorityInput = document.createElement('input');
+    highPriorityInput.setAttribute('type', 'radio');
+    highPriorityInput.setAttribute('id', 'high');
+    highPriorityInput.setAttribute('name', 'priority');
+    highPriorityInput.setAttribute('value', 'high');
+    priorityDiv.appendChild(highPriorityInput);
+
+    todoForm.appendChild(priorityDiv);
 
     const todoBtnDiv = document.createElement('div');
     todoBtnDiv.classList.add('form-div');
