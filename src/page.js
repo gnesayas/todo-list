@@ -2,7 +2,7 @@ import './style.css';
 
 function loadPage(projects) {
     document.body.classList.add('general');
-    document.body.classList.add('flexcolumn');
+    document.body.classList.add('body');
     document.body.style.height = '100vh';
     document.body.style.width = '100vw';
 
@@ -16,7 +16,7 @@ function loadPage(projects) {
     projectDialog.classList.add('dialog');
 
     const projectForm = document.createElement('form');
-    projectForm.classList.add('form');
+    projectForm.classList.add('flexcolumn');
 
     const projectFormHeading = document.createElement('h1');
     projectFormHeading.classList.add('general');
@@ -24,7 +24,7 @@ function loadPage(projects) {
     projectForm.appendChild(projectFormHeading);
 
     const projectNameDiv = document.createElement('div');
-    projectNameDiv.classList.add('form-div');
+    projectNameDiv.classList.add('line-div');
     projectNameDiv.classList.add('space-evenly-div');
 
     const projectNameLabel = document.createElement('label');
@@ -42,7 +42,7 @@ function loadPage(projects) {
     projectForm.appendChild(projectNameDiv);
 
     const projectBtnDiv = document.createElement('div');
-    projectBtnDiv.classList.add('form-div');
+    projectBtnDiv.classList.add('line-div');
     projectBtnDiv.classList.add('space-evenly-div');
 
     const projectCancelBtn = document.createElement('button');
@@ -69,7 +69,7 @@ function loadPage(projects) {
     projectDialog.classList.add('dialog');
 
     const todoForm = document.createElement('form');
-    todoForm.classList.add('form');
+    todoForm.classList.add('flexcolumn');
 
     const todoFormHeading = document.createElement('h1');
     todoFormHeading.classList.add('general');
@@ -77,7 +77,7 @@ function loadPage(projects) {
     todoForm.appendChild(todoFormHeading);
 
     const selectDiv = document.createElement('div');
-    selectDiv.classList.add('form-div');
+    selectDiv.classList.add('line-div');
     selectDiv.classList.add('space-between-div');
 
     const selectLabel = document.createElement('label');
@@ -88,9 +88,10 @@ function loadPage(projects) {
     const selectDropdown = document.createElement('select');
     selectDropdown.setAttribute('id', 'select');
 
-    for (const project of projects) {
+    for (let i = 0; i < projects.length; i++) {
+        const project = projects[i];
         const option = document.createElement('option');
-        option.setAttribute('value', project.name);
+        option.setAttribute('value', i);
         option.textContent = project.name;
         selectDropdown.appendChild(option);
     }
@@ -99,7 +100,7 @@ function loadPage(projects) {
     todoForm.appendChild(selectDiv);
 
     const titleDiv = document.createElement('div');
-    titleDiv.classList.add('form-div');
+    titleDiv.classList.add('line-div');
     titleDiv.classList.add('space-between-div');
 
     const titleLabel = document.createElement('label');
@@ -117,7 +118,7 @@ function loadPage(projects) {
     todoForm.appendChild(titleDiv);
 
     const descriptionDiv = document.createElement('div');
-    descriptionDiv.classList.add('form-div');
+    descriptionDiv.classList.add('line-div');
     descriptionDiv.classList.add('space-between-div');
 
     const descriptionLabel = document.createElement('label');
@@ -135,7 +136,7 @@ function loadPage(projects) {
     todoForm.appendChild(descriptionDiv);
 
     const dateDiv = document.createElement('div');
-    dateDiv.classList.add('form-div');
+    dateDiv.classList.add('line-div');
     dateDiv.classList.add('space-between-div');
 
     const dateLabel = document.createElement('label');
@@ -152,7 +153,7 @@ function loadPage(projects) {
     todoForm.appendChild(dateDiv);
 
     const priorityDiv = document.createElement('div');
-    priorityDiv.classList.add('form-div');
+    priorityDiv.classList.add('line-div');
     priorityDiv.classList.add('space-between-div');
 
     const priorityParagraph = document.createElement('p');
@@ -199,7 +200,7 @@ function loadPage(projects) {
     todoForm.appendChild(priorityDiv);
 
     const todoBtnDiv = document.createElement('div');
-    todoBtnDiv.classList.add('form-div');
+    todoBtnDiv.classList.add('line-div');
     todoBtnDiv.classList.add('space-evenly-div');
 
     const todoCancelBtn = document.createElement('button');
@@ -210,7 +211,7 @@ function loadPage(projects) {
     todoBtnDiv.appendChild(todoCancelBtn);
 
     const todoConfirmBtn = document.createElement('button');
-    todoConfirmBtn.setAttribute('id', 'projectConfirm');
+    todoConfirmBtn.setAttribute('id', 'todoConfirm');
     todoConfirmBtn.setAttribute('type', 'submit');
     todoConfirmBtn.classList.add('form-button');
     todoConfirmBtn.textContent = 'Confirm';
@@ -238,8 +239,81 @@ function loadPage(projects) {
     document.body.appendChild(addingDiv);
 }
 
-function render() {
+function render(projects) {
+    const projectDiv = document.querySelector('.project-div');
+    projectDiv.replaceChildren();
 
+    for (let i = 0; i < projects.length; i++) {
+        const project = projects[i];
+
+        const projectCard = document.createElement('div');
+        projectCard.classList.add('flexcolumn');
+        projectCard.classList.add('project-card');
+
+        const projectHeader = document.createElement('h1');
+        projectHeader.classList.add('general');
+        projectHeader.textContent = project.name;
+        projectCard.appendChild(projectHeader);
+
+        for (let j = 0; j < project.getTodoLength(); j++) {
+            const todo = project.getTodo(j);
+
+            const todoCard = document.createElement('div');
+            todoCard.classList.add('flexcolumn');
+
+            const firstRow = document.createElement('div');
+            firstRow.classList.add('line-div');
+            firstRow.classList.add('space-between-div');
+
+            const title = document.createElement('h1');
+            title.classList.add('general');
+            title.textContent = todo.title;
+            firstRow.appendChild(title);
+
+            const toggleBtn = document.createElement('button');
+            toggleBtn.dataset.projectKey = i;
+            toggleBtn.dataset.todoKey = j;
+            toggleBtn.textContent = 'Mark Complete';
+
+            firstRow.appendChild(toggleBtn);
+            todoCard.appendChild(firstRow);
+
+            const description = document.createElement('p');
+            description.classList.add('general');
+            description.textContent = todo.description;
+            todoCard.appendChild(description);
+
+            const deleteTodoBtn = document.createElement('button');
+            deleteTodoBtn.dataset.projectKey = i;
+            deleteTodoBtn.dataset.todoKey = j;
+            deleteTodoBtn.textContent = 'Delete Todo';
+            todoCard.appendChild(deleteTodoBtn);
+
+            const lastRow = document.createElement('div');
+            lastRow.classList.add('line-div');
+            lastRow.classList.add('space-between-div');
+
+            const dueDate = document.createElement('p');
+            dueDate.classList.add('general');
+            dueDate.textContent = `Due Date: ${todo.dueDate}`;
+            lastRow.appendChild(dueDate);
+
+            const priority = document.createElement('p');
+            priority.classList.add('general');
+            priority.textContent = `Priority: ${todo.priority}`;
+
+            lastRow.appendChild(priority);
+            todoCard.appendChild(lastRow);
+            projectCard.appendChild(todoCard);
+        }
+
+        const deleteProjectBtn = document.createElement('button');
+        deleteProjectBtn.dataset.projectKey = i;
+        deleteProjectBtn.textContent = 'Delete Project';
+
+        projectCard.appendChild(deleteProjectBtn);
+        projectDiv.appendChild(projectCard);
+    }
 }
 
 export { loadPage, render };
