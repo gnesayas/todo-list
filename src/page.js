@@ -308,6 +308,7 @@ function render(projects) {
         }
 
         const deleteProjectBtn = document.createElement('button');
+        deleteProjectBtn.classList.add('deleteProject');
         deleteProjectBtn.dataset.projectKey = i;
         deleteProjectBtn.textContent = 'Delete Project';
 

@@ -28,6 +28,18 @@ import { loadPage, render } from './page';
 
     loadPage(projects);
     render(projects);
+    addDeleteProjectEvents();
+
+    function addDeleteProjectEvents() {
+        document.querySelectorAll('.deleteProject').forEach(button => {
+            button.addEventListener('click', (e) => {
+                projects.splice(e.target.dataset.projectKey, 1);
+                repopulateProjectSelect();
+                render(projects);
+                addDeleteProjectEvents();
+            })
+        });
+    }
 
     const projectDialog = document.getElementById('projectDialog');
 
@@ -57,23 +69,41 @@ import { loadPage, render } from './page';
         }
     });
 
+    const selectDropdown = document.getElementById('select');
+
     projectDialog.addEventListener('close', () => {
         if (projectConfirmed) {
             const project = createProject(nameInput.value);
             projects.push(project);
+            repopulateProjectSelect();
             render(projects);
+            addDeleteProjectEvents();
         }
         nameInput.value = '';
     });
+
+    function repopulateProjectSelect() {
+        selectDropdown.replaceChildren();
+        for (let i = 0; i < projects.length; i++) {
+            const project = projects[i];
+            const option = document.createElement('option');
+            option.setAttribute('value', i);
+            option.textContent = project.name;
+            selectDropdown.appendChild(option);
+        }
+    }
 
     const todoDialog = document.getElementById('todoDialog');
 
     const addTodoBtn = document.getElementById('addTodo');
     addTodoBtn.addEventListener('click', () => {
-        todoDialog.showModal();
+        if (projects.length == 0) {
+            alert('There are no projects to add a todo to. Please create a project first.');
+        } else {
+            todoDialog.showModal();
+        }
     });
 
-    const selectDropdown = document.getElementById('select');
     const titleInput = document.getElementById('title');
     const descriptionInput = document.getElementById('description');
     const dateInput = document.getElementById('date');
@@ -113,6 +143,7 @@ import { loadPage, render } from './page';
             const project = projects[selectDropdown.value];
             project.addTodo(todo);
             render(projects);
+            addDeleteProjectEvents();
         }
         titleInput.value = '';
         descriptionInput.value = '';
