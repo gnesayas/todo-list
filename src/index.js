@@ -1,4 +1,4 @@
-import { loadPage, render } from './page';
+import { loadPage, render, createEditDialog } from './page';
 
 (function () {
     const createTodo = (title, description, dueDate, priority) => {
@@ -41,17 +41,6 @@ import { loadPage, render } from './page';
         });
     }
 
-    function addDeleteTodoEvents() {
-        document.querySelectorAll('.delete-todo').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const project = projects[e.target.dataset.projectKey];
-                project.deleteTodo(e.target.dataset.todoKey);
-                render(projects);
-                addEvents();
-            });
-        });
-    }
-
     function addMarkCompleteEvents() {
         document.querySelectorAll('.mark-complete').forEach(button => {
             button.addEventListener('click', (e) => {
@@ -64,10 +53,98 @@ import { loadPage, render } from './page';
         });
     }
 
+    function addDeleteTodoEvents() {
+        document.querySelectorAll('.delete-todo').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const project = projects[e.target.dataset.projectKey];
+                project.deleteTodo(e.target.dataset.todoKey);
+                render(projects);
+                addEvents();
+            });
+        });
+    }
+
+    function addEditTodoEvents() {
+        document.querySelectorAll('.edit-todo').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const projectIdx = e.target.dataset.projectKey;
+                const todoIdx = e.target.dataset.todoKey;
+                const project = projects[projectIdx];
+                const todo = project.getTodo(todoIdx);
+                createEditDialog(projectIdx, projects, todo);
+
+                const editDialog = document.getElementById('editTodoDialog');
+
+                const editSelectDropdown = document.getElementById('editSelect');
+                const editTitleInput = document.getElementById('editTitle');
+                const editDescriptionInput = document.getElementById('editDescription');
+                const editDateInput = document.getElementById('editDate');
+                const editLowPriorityRadio = document.getElementById('editLow');
+                const editMidPriorityRadio = document.getElementById('editMid');
+                const editHighPriorityRadio = document.getElementById('editHigh');
+
+                let editTodoConfirmed = false;
+
+                const editTodoCancelBtn = document.getElementById('editTodoCancel');
+                editTodoCancelBtn.addEventListener('click', () => {
+                    editTodoConfirmed = false;
+                    editDialog.close();
+                });
+
+                const editTodoConfirmBtn = document.getElementById('editTodoConfirm');
+                editTodoConfirmBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const unenteredFieldMessage = validateAllTodoFieldsEntered(
+                        editTitleInput.value,
+                        editDescriptionInput.value,
+                        editDateInput.value,
+                        editLowPriorityRadio,
+                        editMidPriorityRadio,
+                        editHighPriorityRadio
+                    );
+                    if (unenteredFieldMessage) {
+                        alert(unenteredFieldMessage);
+                    } else {
+                        editTodoConfirmed = true;
+                        editDialog.close();
+                    }
+                });
+
+                editDialog.addEventListener('close', () => {
+                    if (editTodoConfirmed) {
+                        const priority = editLowPriorityRadio.checked ? 'Low' : editMidPriorityRadio.checked ? 'Mid' : 'High';
+                        const newProject = projects[editSelectDropdown.value];
+                        const editedProject = projects[projectIdx];
+                        if (newProject === editedProject) {
+                            todo.title = editTitleInput.value;
+                            todo.description = editDescriptionInput.value;
+                            todo.dueDate = editDateInput.value;
+                            todo.priority = priority;
+                        } else {
+                            editedProject.deleteTodo(todoIdx);
+                            const todo = createTodo(
+                                editTitleInput.value,
+                                editDescriptionInput.value,
+                                editDateInput.value,
+                                priority);
+                            newProject.addTodo(todo);
+                        }
+
+                        render(projects);
+                        addEvents();
+                    }
+                });
+
+                editDialog.showModal();
+            });
+        });
+    }
+
     function addEvents() {
         addDeleteProjectEvents();
-        addDeleteTodoEvents();
         addMarkCompleteEvents();
+        addDeleteTodoEvents();
+        addEditTodoEvents();
     }
 
     const projectDialog = document.getElementById('projectDialog');
@@ -151,7 +228,14 @@ import { loadPage, render } from './page';
     const todoConfirmBtn = document.getElementById('todoConfirm');
     todoConfirmBtn.addEventListener('click', (event) => {
         event.preventDefault();
-        const unenteredFieldMessage = validateAllTodoFieldsEntered();
+        const unenteredFieldMessage = validateAllTodoFieldsEntered(
+            titleInput.value,
+            descriptionInput.value,
+            dateInput.value,
+            lowPriorityRadio,
+            midPriorityRadio,
+            highPriorityRadio
+        );
         if (unenteredFieldMessage) {
             alert(unenteredFieldMessage);
         } else {
@@ -182,16 +266,17 @@ import { loadPage, render } from './page';
         highPriorityRadio.checked = false;
     });
 
-    function validateAllTodoFieldsEntered() {
-        if (!titleInput.value) {
+    function validateAllTodoFieldsEntered(title, description, date,
+        lowRadio, midRadio, highRadio) {
+        if (!title) {
             return 'Please enter a title for your todo.';
-        } else if (!descriptionInput.value) {
+        } else if (!description) {
             return 'Please enter a description for your todo.';
-        } else if (!dateInput.value) {
+        } else if (!date) {
             return 'Please select a due date';
-        } else if (!lowPriorityRadio.checked &&
-            !midPriorityRadio.checked &&
-            !highPriorityRadio.checked) {
+        } else if (!lowRadio.checked &&
+            !midRadio.checked &&
+            !highRadio.checked) {
             return 'Please select a priority.';
         }
         return '';

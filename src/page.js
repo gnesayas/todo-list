@@ -65,8 +65,8 @@ function loadPage(projects) {
 
     const todoDialog = document.createElement('dialog');
     todoDialog.setAttribute('id', 'todoDialog');
-    projectDialog.classList.add('general');
-    projectDialog.classList.add('dialog');
+    todoDialog.classList.add('general');
+    todoDialog.classList.add('dialog');
 
     const todoForm = document.createElement('form');
     todoForm.classList.add('flex-column');
@@ -363,4 +363,183 @@ function render(projects) {
     }
 }
 
-export { loadPage, render };
+function createEditDialog(projectIdx, projects, todo) {
+    const oldDialog = document.getElementById('editTodoDialog');
+    if (oldDialog) {
+        oldDialog.remove();
+    }
+
+    const editTodoDialog = document.createElement('dialog');
+    editTodoDialog.setAttribute('id', 'editTodoDialog');
+    editTodoDialog.classList.add('general');
+    editTodoDialog.classList.add('dialog');
+
+    const todoForm = document.createElement('form');
+    todoForm.classList.add('flex-column');
+
+    const todoFormHeading = document.createElement('h1');
+    todoFormHeading.classList.add('general');
+    todoFormHeading.textContent = 'Edit Todo';
+    todoForm.appendChild(todoFormHeading);
+
+    const selectDiv = document.createElement('div');
+    selectDiv.classList.add('line-div');
+    selectDiv.classList.add('space-between-div');
+
+    const selectLabel = document.createElement('label');
+    selectLabel.setAttribute('for', 'editSelect');
+    selectLabel.textContent = 'Project:';
+    selectDiv.appendChild(selectLabel);
+
+    const selectDropdown = document.createElement('select');
+    selectDropdown.setAttribute('id', 'editSelect');
+
+    for (let i = 0; i < projects.length; i++) {
+        const project = projects[i];
+        const option = document.createElement('option');
+        option.setAttribute('value', i);
+        option.textContent = project.name;
+        if (i === Number(projectIdx)) {
+            option.selected = true;
+        }
+        selectDropdown.appendChild(option);
+    }
+
+    selectDiv.appendChild(selectDropdown);
+    todoForm.appendChild(selectDiv);
+
+    const titleDiv = document.createElement('div');
+    titleDiv.classList.add('line-div');
+    titleDiv.classList.add('space-between-div');
+
+    const titleLabel = document.createElement('label');
+    titleLabel.setAttribute('for', 'editTitle');
+    titleLabel.textContent = 'Title:';
+    titleDiv.appendChild(titleLabel);
+
+    const titleInput = document.createElement('input');
+    titleInput.setAttribute('type', 'text');
+    titleInput.setAttribute('id', 'editTitle');
+    titleInput.setAttribute('name', 'editTitle');
+    titleInput.setAttribute('value', todo.title);
+    titleInput.classList.add('form-input');
+
+    titleDiv.appendChild(titleInput);
+    todoForm.appendChild(titleDiv);
+
+    const descriptionDiv = document.createElement('div');
+    descriptionDiv.classList.add('line-div');
+    descriptionDiv.classList.add('space-between-div');
+
+    const descriptionLabel = document.createElement('label');
+    descriptionLabel.setAttribute('for', 'editDescription');
+    descriptionLabel.textContent = 'Description:';
+    descriptionDiv.appendChild(descriptionLabel);
+
+    const descriptionInput = document.createElement('input');
+    descriptionInput.setAttribute('type', 'text');
+    descriptionInput.setAttribute('id', 'editDescription');
+    descriptionInput.setAttribute('name', 'editDescription');
+    descriptionInput.setAttribute('value', todo.description);
+    descriptionInput.classList.add('form-input');
+
+    descriptionDiv.appendChild(descriptionInput);
+    todoForm.appendChild(descriptionDiv);
+
+    const dateDiv = document.createElement('div');
+    dateDiv.classList.add('line-div');
+    dateDiv.classList.add('space-between-div');
+
+    const dateLabel = document.createElement('label');
+    dateLabel.setAttribute('for', 'editDate');
+    dateLabel.textContent = 'Due Date:';
+    dateDiv.appendChild(dateLabel);
+
+    const dateInput = document.createElement('input');
+    dateInput.setAttribute('type', 'date');
+    dateInput.setAttribute('id', 'editDate');
+    dateInput.setAttribute('name', 'editDate');
+    dateInput.setAttribute('value', todo.dueDate);
+
+    dateDiv.appendChild(dateInput);
+    todoForm.appendChild(dateDiv);
+
+    const priorityDiv = document.createElement('div');
+    priorityDiv.classList.add('line-div');
+    priorityDiv.classList.add('space-between-div');
+
+    const priorityParagraph = document.createElement('p');
+    priorityParagraph.textContent = 'Priority:';
+    priorityParagraph.classList.add('general');
+    priorityDiv.appendChild(priorityParagraph);
+
+    const lowPriorityLabel = document.createElement('label');
+    lowPriorityLabel.setAttribute('for', 'editLow');
+    lowPriorityLabel.textContent = 'Low';
+
+    const lowPriorityInput = document.createElement('input');
+    lowPriorityInput.setAttribute('type', 'radio');
+    lowPriorityInput.setAttribute('id', 'editLow');
+    lowPriorityInput.setAttribute('name', 'editPriority');
+    lowPriorityInput.setAttribute('value', 'low');
+
+    const midPriorityLabel = document.createElement('label');
+    midPriorityLabel.setAttribute('for', 'editMid');
+    midPriorityLabel.textContent = 'Mid';
+
+    const midPriorityInput = document.createElement('input');
+    midPriorityInput.setAttribute('type', 'radio');
+    midPriorityInput.setAttribute('id', 'editMid');
+    midPriorityInput.setAttribute('name', 'editPriority');
+    midPriorityInput.setAttribute('value', 'mid');
+
+    const highPriorityLabel = document.createElement('label');
+    highPriorityLabel.setAttribute('for', 'editHigh');
+    highPriorityLabel.textContent = 'High';
+
+    const highPriorityInput = document.createElement('input');
+    highPriorityInput.setAttribute('type', 'radio');
+    highPriorityInput.setAttribute('id', 'editHigh');
+    highPriorityInput.setAttribute('name', 'editPriority');
+    highPriorityInput.setAttribute('value', 'high');
+
+    if (todo.priority === 'Low') {
+        lowPriorityInput.checked = true;
+    } else if (todo.priority === 'Mid') {
+        midPriorityInput.checked = true;
+    } else {
+        highPriorityInput.checked = true;
+    }
+
+    priorityDiv.appendChild(lowPriorityLabel);
+    priorityDiv.appendChild(lowPriorityInput);
+    priorityDiv.appendChild(midPriorityLabel);
+    priorityDiv.appendChild(midPriorityInput);
+    priorityDiv.appendChild(highPriorityLabel);
+    priorityDiv.appendChild(highPriorityInput);
+    todoForm.appendChild(priorityDiv);
+
+    const todoBtnDiv = document.createElement('div');
+    todoBtnDiv.classList.add('line-div');
+    todoBtnDiv.classList.add('space-evenly-div');
+
+    const todoCancelBtn = document.createElement('button');
+    todoCancelBtn.setAttribute('id', 'editTodoCancel');
+    todoCancelBtn.setAttribute('type', 'button');
+    todoCancelBtn.classList.add('form-button');
+    todoCancelBtn.textContent = 'Cancel';
+    todoBtnDiv.appendChild(todoCancelBtn);
+
+    const todoConfirmBtn = document.createElement('button');
+    todoConfirmBtn.setAttribute('id', 'editTodoConfirm');
+    todoConfirmBtn.setAttribute('type', 'submit');
+    todoConfirmBtn.classList.add('form-button');
+    todoConfirmBtn.textContent = 'Confirm';
+
+    todoBtnDiv.appendChild(todoConfirmBtn);
+    todoForm.appendChild(todoBtnDiv);
+    editTodoDialog.appendChild(todoForm);
+    document.body.appendChild(editTodoDialog);
+}
+
+export { loadPage, render, createEditDialog };
