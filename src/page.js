@@ -16,7 +16,7 @@ function loadPage(projects) {
     projectDialog.classList.add('dialog');
 
     const projectForm = document.createElement('form');
-    projectForm.classList.add('flexcolumn');
+    projectForm.classList.add('flex-column');
 
     const projectFormHeading = document.createElement('h1');
     projectFormHeading.classList.add('general');
@@ -69,7 +69,7 @@ function loadPage(projects) {
     projectDialog.classList.add('dialog');
 
     const todoForm = document.createElement('form');
-    todoForm.classList.add('flexcolumn');
+    todoForm.classList.add('flex-column');
 
     const todoFormHeading = document.createElement('h1');
     todoFormHeading.classList.add('general');
@@ -247,36 +247,47 @@ function render(projects) {
         const project = projects[i];
 
         const projectCard = document.createElement('div');
-        projectCard.classList.add('flexcolumn');
+        projectCard.classList.add('flex-column');
         projectCard.classList.add('project-card');
 
         const projectHeader = document.createElement('h1');
         projectHeader.classList.add('general');
+        projectHeader.classList.add('overflow');
+        projectHeader.classList.add('header-height');
+        projectHeader.classList.add('center-text');
         projectHeader.textContent = project.name;
         projectCard.appendChild(projectHeader);
+
+        const todoContainer = document.createElement('div');
+        todoContainer.classList.add('flex-column');
+        todoContainer.classList.add('overflow');
+        todoContainer.classList.add('todo-container');
 
         for (let j = 0; j < project.getTodoLength(); j++) {
             const todo = project.getTodo(j);
 
             const todoCard = document.createElement('div');
-            todoCard.classList.add('flexcolumn');
+            todoCard.classList.add('flex-column');
+            todoCard.classList.add('todo-card');
+            if (todo.completed) {
+                todoCard.classList.add('complete');
+            } else if (todo.priority === 'Low') {
+                todoCard.classList.add('low-priority');
+            } else if (todo.priority === 'Mid') {
+                todoCard.classList.add('mid-priority');
+            } else {
+                todoCard.classList.add('high-priority');
+            }
 
             const firstRow = document.createElement('div');
             firstRow.classList.add('line-div');
             firstRow.classList.add('space-between-div');
 
-            const title = document.createElement('h1');
+            const title = document.createElement('h2');
             title.classList.add('general');
             title.textContent = todo.title;
+
             firstRow.appendChild(title);
-
-            const toggleBtn = document.createElement('button');
-            toggleBtn.classList.add('markComplete');
-            toggleBtn.dataset.projectKey = i;
-            toggleBtn.dataset.todoKey = j;
-            toggleBtn.textContent = 'Mark Complete';
-
-            firstRow.appendChild(toggleBtn);
             todoCard.appendChild(firstRow);
 
             const secondRow = document.createElement('div');
@@ -288,19 +299,39 @@ function render(projects) {
             description.textContent = todo.description;
             secondRow.appendChild(description);
 
-            const status = document.createElement('p');
-            status.classList.add('general');
-            status.textContent = `Status: ${todo.completed ? 'Complete' : 'Incomplete'}`;
-            
-            secondRow.appendChild(status);
+            const toggleBtn = document.createElement('button');
+            toggleBtn.classList.add('mark-complete');
+            toggleBtn.dataset.projectKey = i;
+            toggleBtn.dataset.todoKey = j;
+            toggleBtn.textContent = 'Mark Complete';
+
+            secondRow.appendChild(toggleBtn);
             todoCard.appendChild(secondRow);
 
+            const thirdRow = document.createElement('div');
+            thirdRow.classList.add('line-div');
+            thirdRow.classList.add('space-between-div');
+
             const deleteTodoBtn = document.createElement('button');
-            deleteTodoBtn.classList.add('deleteTodo');
+            deleteTodoBtn.classList.add('delete-todo');
             deleteTodoBtn.dataset.projectKey = i;
             deleteTodoBtn.dataset.todoKey = j;
             deleteTodoBtn.textContent = 'Delete Todo';
-            todoCard.appendChild(deleteTodoBtn);
+            thirdRow.appendChild(deleteTodoBtn);
+
+            const editTodoBtn = document.createElement('button');
+            editTodoBtn.classList.add('edit-todo');
+            editTodoBtn.dataset.projectKey = i;
+            editTodoBtn.dataset.todoKey = j;
+            editTodoBtn.textContent = 'Edit Todo';
+            thirdRow.appendChild(editTodoBtn);
+
+            const status = document.createElement('p');
+            status.classList.add('general');
+            status.textContent = `Status: ${todo.completed ? 'Complete' : 'Incomplete'}`;
+
+            thirdRow.appendChild(status);
+            todoCard.appendChild(thirdRow);
 
             const lastRow = document.createElement('div');
             lastRow.classList.add('line-div');
@@ -317,11 +348,13 @@ function render(projects) {
 
             lastRow.appendChild(priority);
             todoCard.appendChild(lastRow);
-            projectCard.appendChild(todoCard);
+            todoContainer.appendChild(todoCard);
         }
 
+        projectCard.appendChild(todoContainer);
+
         const deleteProjectBtn = document.createElement('button');
-        deleteProjectBtn.classList.add('deleteProject');
+        deleteProjectBtn.classList.add('delete-project');
         deleteProjectBtn.dataset.projectKey = i;
         deleteProjectBtn.textContent = 'Delete Project';
 

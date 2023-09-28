@@ -31,7 +31,7 @@ import { loadPage, render } from './page';
     addDeleteProjectEvents();
 
     function addDeleteProjectEvents() {
-        document.querySelectorAll('.deleteProject').forEach(button => {
+        document.querySelectorAll('.delete-project').forEach(button => {
             button.addEventListener('click', (e) => {
                 projects.splice(e.target.dataset.projectKey, 1);
                 repopulateProjectSelect();
@@ -42,7 +42,7 @@ import { loadPage, render } from './page';
     }
 
     function addDeleteTodoEvents() {
-        document.querySelectorAll('.deleteTodo').forEach(button => {
+        document.querySelectorAll('.delete-todo').forEach(button => {
             button.addEventListener('click', (e) => {
                 const project = projects[e.target.dataset.projectKey];
                 project.deleteTodo(e.target.dataset.todoKey);
@@ -53,7 +53,7 @@ import { loadPage, render } from './page';
     }
 
     function addMarkCompleteEvents() {
-        document.querySelectorAll('.markComplete').forEach(button => {
+        document.querySelectorAll('.mark-complete').forEach(button => {
             button.addEventListener('click', (e) => {
                 const project = projects[e.target.dataset.projectKey];
                 const todo = project.getTodo(e.target.dataset.todoKey);
