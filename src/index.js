@@ -36,9 +36,38 @@ import { loadPage, render } from './page';
                 projects.splice(e.target.dataset.projectKey, 1);
                 repopulateProjectSelect();
                 render(projects);
-                addDeleteProjectEvents();
-            })
+                addEvents();
+            });
         });
+    }
+
+    function addDeleteTodoEvents() {
+        document.querySelectorAll('.deleteTodo').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const project = projects[e.target.dataset.projectKey];
+                project.deleteTodo(e.target.dataset.todoKey);
+                render(projects);
+                addEvents();
+            });
+        });
+    }
+
+    function addMarkCompleteEvents() {
+        document.querySelectorAll('.markComplete').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const project = projects[e.target.dataset.projectKey];
+                const todo = project.getTodo(e.target.dataset.todoKey);
+                todo.completed = !todo.completed;
+                render(projects);
+                addEvents();
+            });
+        });
+    }
+
+    function addEvents() {
+        addDeleteProjectEvents();
+        addDeleteTodoEvents();
+        addMarkCompleteEvents();
     }
 
     const projectDialog = document.getElementById('projectDialog');
@@ -77,7 +106,7 @@ import { loadPage, render } from './page';
             projects.push(project);
             repopulateProjectSelect();
             render(projects);
-            addDeleteProjectEvents();
+            addEvents();
         }
         nameInput.value = '';
     });
@@ -143,7 +172,7 @@ import { loadPage, render } from './page';
             const project = projects[selectDropdown.value];
             project.addTodo(todo);
             render(projects);
-            addDeleteProjectEvents();
+            addEvents();
         }
         titleInput.value = '';
         descriptionInput.value = '';

@@ -271,6 +271,7 @@ function render(projects) {
             firstRow.appendChild(title);
 
             const toggleBtn = document.createElement('button');
+            toggleBtn.classList.add('markComplete');
             toggleBtn.dataset.projectKey = i;
             toggleBtn.dataset.todoKey = j;
             toggleBtn.textContent = 'Mark Complete';
@@ -278,12 +279,24 @@ function render(projects) {
             firstRow.appendChild(toggleBtn);
             todoCard.appendChild(firstRow);
 
+            const secondRow = document.createElement('div');
+            secondRow.classList.add('line-div');
+            secondRow.classList.add('space-between-div');
+
             const description = document.createElement('p');
             description.classList.add('general');
             description.textContent = todo.description;
-            todoCard.appendChild(description);
+            secondRow.appendChild(description);
+
+            const status = document.createElement('p');
+            status.classList.add('general');
+            status.textContent = `Status: ${todo.completed ? 'Complete' : 'Incomplete'}`;
+            
+            secondRow.appendChild(status);
+            todoCard.appendChild(secondRow);
 
             const deleteTodoBtn = document.createElement('button');
+            deleteTodoBtn.classList.add('deleteTodo');
             deleteTodoBtn.dataset.projectKey = i;
             deleteTodoBtn.dataset.todoKey = j;
             deleteTodoBtn.textContent = 'Delete Todo';
