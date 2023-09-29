@@ -46,6 +46,13 @@
     overflow: auto;
 }
 
+.no-flex-line-div {
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    overflow: auto;
+}
+
 .space-evenly-div {
     justify-content: space-evenly;
 }
@@ -96,6 +103,7 @@
     border-radius: 16px;
     box-sizing: border-box;
     width: 100%;
+    cursor: pointer;
 }
 
 .complete {

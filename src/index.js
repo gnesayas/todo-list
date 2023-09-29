@@ -67,6 +67,7 @@ import { loadPage, render, createEditDialog } from './page';
     function addEditTodoEvents() {
         document.querySelectorAll('.edit-todo').forEach(button => {
             button.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const projectIdx = e.target.dataset.projectKey;
                 const todoIdx = e.target.dataset.todoKey;
                 const project = projects[projectIdx];
@@ -121,12 +122,14 @@ import { loadPage, render, createEditDialog } from './page';
                             todo.dueDate = editDateInput.value;
                             todo.priority = priority;
                         } else {
+                            const completed = editedProject.getTodo(todoIdx).completed;
                             editedProject.deleteTodo(todoIdx);
                             const todo = createTodo(
                                 editTitleInput.value,
                                 editDescriptionInput.value,
                                 editDateInput.value,
                                 priority);
+                            todo.completed = completed;
                             newProject.addTodo(todo);
                         }
 
@@ -140,11 +143,33 @@ import { loadPage, render, createEditDialog } from './page';
         });
     }
 
+    function addCollapseEvents() {
+        document.querySelectorAll('.todo-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                let target = e.target;
+                while (!target.classList.contains('todo-card')) {
+                    target = target.parentElement;
+                }
+                const children = target.children;
+                const secondRow = children.item(1);
+                const thirdRow = children.item(2);
+                if (secondRow.style.display === 'flex') {
+                    secondRow.style.display = 'none';
+                    thirdRow.style.display = 'none';
+                } else {
+                    secondRow.style.display = 'flex';
+                    thirdRow.style.display = 'flex';
+                }
+            });
+        });
+    }
+
     function addEvents() {
         addDeleteProjectEvents();
         addMarkCompleteEvents();
         addDeleteTodoEvents();
         addEditTodoEvents();
+        addCollapseEvents();
     }
 
     const projectDialog = document.getElementById('projectDialog');

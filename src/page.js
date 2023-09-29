@@ -291,7 +291,8 @@ function render(projects) {
             todoCard.appendChild(firstRow);
 
             const secondRow = document.createElement('div');
-            secondRow.classList.add('line-div');
+            secondRow.classList.add('no-flex-line-div');
+            secondRow.style.display = 'none';
             secondRow.classList.add('space-between-div');
 
             const description = document.createElement('p');
@@ -309,7 +310,8 @@ function render(projects) {
             todoCard.appendChild(secondRow);
 
             const thirdRow = document.createElement('div');
-            thirdRow.classList.add('line-div');
+            thirdRow.classList.add('no-flex-line-div');
+            thirdRow.style.display = 'none';
             thirdRow.classList.add('space-between-div');
 
             const deleteTodoBtn = document.createElement('button');
