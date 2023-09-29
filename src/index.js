@@ -7,34 +7,55 @@ import { loadPage, render, createEditDialog } from './page';
 
     const createProject = (name) => {
         const todos = [];
-        const getTodoLength = () => {
-            return todos.length;
-        }
-        const getTodo = (idx) => {
-            return todos[idx];
-        }
-        const addTodo = (todo) => {
-            todos.push(todo);
-        };
-        const deleteTodo = (idx) => {
-            todos.splice(idx, 1);
-        };
-        return { name, getTodoLength, getTodo, addTodo, deleteTodo };
+        return { name, todos };
     };
 
-    const projects = [];
-    const defaultProject = createProject('My Project');
-    projects.push(defaultProject);
+    function storeProjects(projects) {
+        localStorage.clear();
+    
+        for (let i = 0; i < projects.length; i++) {
+            const project = projects[i];
+            localStorage.setItem(i, JSON.stringify(project));
+        }
+    }
+    
+    function getProjects() {
+        const loadedProjects = [];
+        Object.keys(localStorage).forEach(key => {
+            const savedProject = JSON.parse(localStorage.getItem(key));
+            const loadedProject = createProject(savedProject.name);
+
+            for (const item of savedProject.todos) {
+                const loadedTodo = createTodo(
+                    item.title,
+                    item.description,
+                    item.dueDate,
+                    item.priority);
+                loadedTodo.completed = item.completed;
+                loadedProject.todos.push(loadedTodo);                
+            }
+            loadedProjects.push(loadedProject);
+        });
+        return loadedProjects;
+    }
+
+    const projects = getProjects();
+    if (projects.length === 0) {
+        const defaultProject = createProject('My Project');
+        projects.push(defaultProject);
+        storeProjects(projects);
+    }
 
     loadPage(projects);
     render(projects);
-    addDeleteProjectEvents();
+    addEvents();
 
     function addDeleteProjectEvents() {
         document.querySelectorAll('.delete-project').forEach(button => {
             button.addEventListener('click', (e) => {
                 projects.splice(e.target.dataset.projectKey, 1);
                 repopulateProjectSelect();
+                storeProjects(projects);
                 render(projects);
                 addEvents();
             });
@@ -45,8 +66,9 @@ import { loadPage, render, createEditDialog } from './page';
         document.querySelectorAll('.mark-complete').forEach(button => {
             button.addEventListener('click', (e) => {
                 const project = projects[e.target.dataset.projectKey];
-                const todo = project.getTodo(e.target.dataset.todoKey);
+                const todo = project.todos[e.target.dataset.todoKey];
                 todo.completed = !todo.completed;
+                storeProjects(projects);
                 render(projects);
                 addEvents();
             });
@@ -57,7 +79,8 @@ import { loadPage, render, createEditDialog } from './page';
         document.querySelectorAll('.delete-todo').forEach(button => {
             button.addEventListener('click', (e) => {
                 const project = projects[e.target.dataset.projectKey];
-                project.deleteTodo(e.target.dataset.todoKey);
+                project.todos.splice(e.target.dataset.todoKey, 1);
+                storeProjects(projects);
                 render(projects);
                 addEvents();
             });
@@ -71,7 +94,7 @@ import { loadPage, render, createEditDialog } from './page';
                 const projectIdx = e.target.dataset.projectKey;
                 const todoIdx = e.target.dataset.todoKey;
                 const project = projects[projectIdx];
-                const todo = project.getTodo(todoIdx);
+                const todo = project.todos[todoIdx];
                 createEditDialog(projectIdx, projects, todo);
 
                 const editDialog = document.getElementById('editTodoDialog');
@@ -122,17 +145,18 @@ import { loadPage, render, createEditDialog } from './page';
                             todo.dueDate = editDateInput.value;
                             todo.priority = priority;
                         } else {
-                            const completed = editedProject.getTodo(todoIdx).completed;
-                            editedProject.deleteTodo(todoIdx);
+                            const completed = editedProject.todos[todoIdx].completed;
+                            editedProject.todos.splice(todoIdx, 1);
                             const todo = createTodo(
                                 editTitleInput.value,
                                 editDescriptionInput.value,
                                 editDateInput.value,
                                 priority);
                             todo.completed = completed;
-                            newProject.addTodo(todo);
+                            newProject.todos.push(todo);
                         }
 
+                        storeProjects(projects);
                         render(projects);
                         addEvents();
                     }
@@ -207,6 +231,7 @@ import { loadPage, render, createEditDialog } from './page';
             const project = createProject(nameInput.value);
             projects.push(project);
             repopulateProjectSelect();
+            storeProjects(projects);
             render(projects);
             addEvents();
         }
@@ -279,7 +304,8 @@ import { loadPage, render, createEditDialog } from './page';
                 priority);
 
             const project = projects[selectDropdown.value];
-            project.addTodo(todo);
+            project.todos.push(todo);
+            storeProjects(projects);
             render(projects);
             addEvents();
         }

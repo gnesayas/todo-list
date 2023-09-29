@@ -263,8 +263,8 @@ function render(projects) {
         todoContainer.classList.add('overflow');
         todoContainer.classList.add('todo-container');
 
-        for (let j = 0; j < project.getTodoLength(); j++) {
-            const todo = project.getTodo(j);
+        for (let j = 0; j < project.todos.length; j++) {
+            const todo = project.todos[j];
 
             const todoCard = document.createElement('div');
             todoCard.classList.add('flex-column');
